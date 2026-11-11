@@ -19,7 +19,7 @@ The primary objective of this investigation was to detect, correlate, and recons
  <img src="https://img.shields.io/badge/-Splunk-000000?&style=for-the-badge&logo=Splunk&logoColor=white" />
  <img src="https://img.shields.io/badge/-Wireshark-1679A7?&style=for-the-badge&logo=Wireshark&logoColor=white" /> 
  <img src="https://img.shields.io/badge/-TryHackMe-222831?&style=for-the-badge&logo=TryHackMe&logoColor=white" /> 
- *MITRE ATT&CK*
+
 ---
 
 ## Executive Summary
