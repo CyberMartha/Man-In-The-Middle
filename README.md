@@ -46,7 +46,6 @@ Address Resolution Protocol (ARP) lacks built-in authentication, allowing an att
 * **Gateway Impersonation:** Detected conflicting ARP replies claiming ownership of the corporate gateway IP, confirming active ARP cache poisoning on the LAN.
 * **Attack Scope:** Isolated **14 spoofed ARP packets** originating from the attacker's MAC address to maintain a persistent Man-in-the-Middle position.
 
-<img width="1302" height="664" alt="image" src="https://github.com/user-attachments/assets/11b784a1-33e5-49c9-a724-bf1b4fb51b57" />
 
 <img width="1310" height="672" alt="image" src="https://github.com/user-attachments/assets/e5ce53d5-da7e-4910-893f-c03b371747e4" />
 <img width="1312" height="674" alt="image" src="https://github.com/user-attachments/assets/de5abffa-1a06-4b54-af7d-922a72657084" />
@@ -91,7 +90,7 @@ Even when redirected to a rogue server, modern browsers expect HTTPS encryption.
 * **Protocol Downgrade Confirmed:** Identified the victim's login session to `corp-login.acme-corp.local` occurring entirely over cleartext HTTP (`TCP/80`) rather than HTTPS (`TCP/443`).
 * **Credential Compromise:** Reconstructing the HTTP `POST` stream exposed the victim's username and plaintext password transmitted directly to the rogue host (`192.168.10.55`).
 
-<img width="1303" height="604" alt="image" src="https://github.com/user-attachments/assets/23395f27-82ad-476a-9f57-0ef96a945a21" />
+
 <img width="1300" height="615" alt="image" src="https://github.com/user-attachments/assets/bbc605b4-d7c4-4df8-8fee-1d3f181cacf0" />
 <img width="1307" height="613" alt="image" src="https://github.com/user-attachments/assets/010f5ce3-9583-497b-8898-8662778d19f2" />
 <img width="1297" height="616" alt="image" src="https://github.com/user-attachments/assets/52dbdfca-f9ea-47f7-8029-c2de07ca3a1c" />
