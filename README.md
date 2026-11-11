@@ -7,6 +7,7 @@ The primary objective of this investigation was to detect, correlate, and recons
 
 ## Skills Learned & Core Competencies
 * **Layer-2 Anomaly Detection (ARP Spoofing):** Identifying duplicate ARP replies, gratuitous ARP floods, and MAC-to-IP binding conflicts that indicate network interception between a victim host and the default gateway.
+  
 * **DNS Cache Poisoning & Redirection Analysis:** Correlating forged DNS `A`-record responses in Wireshark and Splunk to uncover rogue internal IP redirection (`corp-login.acme-corp.local`).
 * **SSL Stripping & Protocol Downgrade Forensics:** Detecting HTTPS-to-HTTP downgrade attacks, inspecting anomalous HTTP `301`/`302` redirects, and reconstructing cleartext `POST` login streams.
 * **SIEM & PCAP Cross-Correlation:** Pivoting between Splunk SPL queries and raw packet captures (`pcapng`) to validate alerts, quantify attack scope, and attribute malicious activity.
@@ -27,6 +28,7 @@ The primary objective of this investigation was to detect, correlate, and recons
 A routine network monitoring alert at *Acme Corp* flagged anomalous traffic patterns inside the corporate LAN, suggesting an active **Man-in-the-Middle (MITM)** compromise. Rather than occurring as an isolated event, forensic analysis revealed a **three-stage chained attack** designed to quietly intercept user sessions and steal corporate login credentials:
 
 1. **Network Interception (`ARP Spoofing`):** The attacker poisoned the local ARP cache to position their host between the victim workstation and the network gateway.
+ 
 2. **Traffic Redirection (`DNS Spoofing`):** Once inline, the attacker forged DNS responses for an internal authentication portal (`corp-login.acme-corp.local`), pointing the victim to a rogue IP (`192.168.10.55`).
 3. **Credential Harvesting (`SSL Stripping`):** The attacker downgraded the victim's encrypted HTTPS session to cleartext HTTP, capturing submitted login credentials in plaintext.
 
@@ -39,6 +41,7 @@ Address Resolution Protocol (ARP) lacks built-in authentication, allowing an att
 
 #### Investigation Methodology & Filters
 * **Step 1 — Isolate ARP Traffic:** Opened the incident packet capture in **Wireshark** and applied the `arp` display filter to separate Layer-2 address resolution frames from higher-layer noise.
+  
 * **Step 2 — Filter Unsolicited ARP Replies:** Narrowed the capture to ARP responses using `arp.opcode == 2` and checked Wireshark's built-in expert warnings (`arp.duplicate-address-detected` / `arp.duplicate-address-frame`) to spot conflicting MAC-to-IP mappings.
 * **Step 3 — Quantify Spoofed Frames:** Filtered by the rogue MAC address (`eth.src == <ATTACKER_MAC> && arp.opcode == 2`) to measure the exact volume of poisoning packets sent during the interception window.
 
@@ -61,6 +64,7 @@ After intercepting traffic via ARP spoofing, the adversary manipulated DNS name 
 
 #### Investigation Methodology & Queries
 * **Step 1 — Inspect DNS Query/Response Pairs (Wireshark):** Applied `dns` and `dns.flags.response == 1` to examine resolution replies, looking for multiple conflicting `A`-record answers or abnormally fast replies arriving ahead of the legitimate internal DNS server.
+  
 * **Step 2 — Target Corporate Authentication Domain:** Filtered specifically for the targeted internal login portal using `dns.qry.name contains "corp-login.acme-corp.local"`.
 * **Step 3 — Correlate Volume in Splunk:** Queried ingested network logs (`index="network_logs"`) to count spoofed DNS responses and verify every internal host affected by the poisoned records:
   ```spl
@@ -83,6 +87,7 @@ Even when redirected to a rogue server, modern browsers expect HTTPS encryption.
 
 #### Investigation Methodology & Filters
 * **Step 1 — Isolate Unencrypted Web Traffic:** Applied `http` and `http.request.method == "POST"` in Wireshark to hunt for authentication submissions transmitted without TLS encryption.
+  
 * **Step 2 — Inspect Downgrade Indicators:** Checked HTTP response headers (`http.response.code == 301 || http.response.code == 302`) and external links rewritten from `https://` to `http://`.
 * **Step 3 — Reconstruct Login Stream:** Used **Right-Click -> Follow -> HTTP Stream** on the victim's `POST` login request to examine the raw form payload.
 
@@ -110,5 +115,6 @@ Even when redirected to a rogue server, modern browsers expect HTTPS encryption.
 To prevent and detect chained MITM attacks across enterprise networks, I recommend implementing layered Layer-2 through Layer-7 defenses:
 
 1. **Enable Dynamic ARP Inspection (DAI) & DHCP Snooping:** Configure enterprise switches to drop untrusted ARP packets with invalid MAC-to-IP bindings, neutralizing ARP spoofing at the access layer.
+   
 2. **Enforce DNSSEC & Internal DNS Egress Controls:** Sign internal/external zones with DNSSEC to prevent cache poisoning and restrict endpoint DNS queries strictly to authorized internal resolvers.
 3. **Mandate HSTS (HTTP Strict Transport Security):** Configure web servers (`corp-login.acme-corp.local`) with HSTS headers and preload lists so browsers refuse cleartext HTTP connections and block SSL stripping downgrades.
