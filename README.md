@@ -46,8 +46,14 @@ Address Resolution Protocol (ARP) lacks built-in authentication, allowing an att
 * **Gateway Impersonation:** Detected conflicting ARP replies claiming ownership of the corporate gateway IP, confirming active ARP cache poisoning on the LAN.
 * **Attack Scope:** Isolated **14 spoofed ARP packets** originating from the attacker's MAC address to maintain a persistent Man-in-the-Middle position.
 
-<!-- SCREENSHOT 1A: Wireshark ARP filter showing duplicate IP/MAC warnings and spoofed opcode 2 replies -->
-<img width="1366" height="600" alt="Wireshark ARP Spoofing Duplicate Address Detection" src="PASTE_WIRESHARK_ARP_SCREENSHOT_URL_HERE" />
+<img width="1302" height="664" alt="image" src="https://github.com/user-attachments/assets/11b784a1-33e5-49c9-a724-bf1b4fb51b57" />
+
+<img width="1310" height="672" alt="image" src="https://github.com/user-attachments/assets/e5ce53d5-da7e-4910-893f-c03b371747e4" />
+<img width="1312" height="674" alt="image" src="https://github.com/user-attachments/assets/de5abffa-1a06-4b54-af7d-922a72657084" />
+<img width="1309" height="669" alt="image" src="https://github.com/user-attachments/assets/0384e1fd-3050-47a1-9296-7c6d63d6db5d" />
+<img width="1301" height="651" alt="image" src="https://github.com/user-attachments/assets/79bc1860-36ef-41dc-863f-9491d33991af" />
+
+
 
 ---
 
@@ -66,11 +72,10 @@ After intercepting traffic via ARP spoofing, the adversary manipulated DNS name 
 * **Poisoned DNS Records:** Observed **211 DNS responses** for `corp-login.acme-corp.local` during the incident window.
 * **Malicious Redirection Target:** Confirmed the attacker's forged DNS replies resolved `corp-login.acme-corp.local` to the rogue IP address **`192.168.10.55`** instead of the legitimate internal server.
 
-<!-- SCREENSHOT 2A: Wireshark showing forged DNS A-record response pointing corp-login.acme-corp.local to 192.168.10.55 -->
-<img width="1366" height="600" alt="Wireshark Forged DNS Response Redirection" src="PASTE_WIRESHARK_DNS_SPOOF_SCREENSHOT_URL_HERE" />
-
-<!-- SCREENSHOT 2B: Splunk SPL search aggregating the 211 DNS responses for corp-login.acme-corp.local -->
-<img width="1366" height="600" alt="Splunk DNS Spoofing Log Aggregation" src="PASTE_SPLUNK_DNS_SPOOF_SCREENSHOT_URL_HERE" />
+<img width="1300" height="644" alt="image" src="https://github.com/user-attachments/assets/ec8159c1-6a13-42a2-b5c2-56668319b7c8" />
+<img width="1291" height="656" alt="image" src="https://github.com/user-attachments/assets/1cfcf253-5ce8-4c39-a9ac-d6a5e66d995d" />
+<img width="1307" height="673" alt="image" src="https://github.com/user-attachments/assets/b3688531-8b08-4473-a40e-4853aee7c79f" />
+<img width="1310" height="643" alt="image" src="https://github.com/user-attachments/assets/8b529a7f-0033-4ae1-b160-5e24045ded39" />
 
 ---
 
@@ -86,10 +91,11 @@ Even when redirected to a rogue server, modern browsers expect HTTPS encryption.
 * **Protocol Downgrade Confirmed:** Identified the victim's login session to `corp-login.acme-corp.local` occurring entirely over cleartext HTTP (`TCP/80`) rather than HTTPS (`TCP/443`).
 * **Credential Compromise:** Reconstructing the HTTP `POST` stream exposed the victim's username and plaintext password transmitted directly to the rogue host (`192.168.10.55`).
 
-<!-- SCREENSHOT 3A: Wireshark Follow HTTP Stream showing stripped HTTP POST request with plaintext credentials -->
-<img width="1366" height="600" alt="Wireshark SSL Stripping Cleartext HTTP POST Credential Capture" src="PASTE_WIRESHARK_SSL_STRIP_SCREENSHOT_URL_HERE" />
+<img width="1303" height="604" alt="image" src="https://github.com/user-attachments/assets/23395f27-82ad-476a-9f57-0ef96a945a21" />
+<img width="1300" height="615" alt="image" src="https://github.com/user-attachments/assets/bbc605b4-d7c4-4df8-8fee-1d3f181cacf0" />
+<img width="1307" height="613" alt="image" src="https://github.com/user-attachments/assets/010f5ce3-9583-497b-8898-8662778d19f2" />
+<img width="1297" height="616" alt="image" src="https://github.com/user-attachments/assets/52dbdfca-f9ea-47f7-8029-c2de07ca3a1c" />
 
----
 
 ## Summary of Indicators of Compromise (IoCs) & Attack Chain
 
